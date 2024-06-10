@@ -49,10 +49,10 @@ async def refresh_token(request: Request, response: Response):
         user_id = payload.get("sub")
         if not user_id:
             raise HTTPException(status_code=401, detail="Invalid token")
-        
         access_token = create_access_token({"sub": str(user_id)})
         response.set_cookie("access_token", access_token, httponly=True)
-        return {"access_token": access_token}
+        data = await AuthUser.find_by_id(int(user_id))
+        return {"data": data,"access_token":access_token}
     except Exception as e:
         raise HTTPException(status_code=401, detail="Invalid token")
     

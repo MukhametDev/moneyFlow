@@ -25,6 +25,9 @@ async def create_transaction(transaction: TransactionCreate, current_user: User 
 
 @router.get("/transactions")
 async def get_transactions(current_user: User = Depends(get_current_user)):
+    if not current_user:
+        raise HTTPException(status_code=401, detail="Unauthorized user. Please log in.")
+    
     user_group_bills = await GroupBillService.find_all({"user_id": current_user.id})
     transactions = []
     

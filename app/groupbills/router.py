@@ -12,9 +12,11 @@ router = APIRouter(
     tags=['Группа счетов']
 )
 
-@router.get("/group-bills")
+@router.get("/group-bill")
 async def get_group_bills(current_user:User = Depends(get_current_user)):
     group_bills = await GroupBillService.find_all({"user_id": current_user.id})
+    if not group_bills:
+        raise HTTPException(status_code=404,detail="GroupBill not found")
     return group_bills
 
 
